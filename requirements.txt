@@ -1,0 +1,11 @@
+streamlit>=1.40,<2
+psycopg[binary]>=3.2,<4
+SQLAlchemy>=2.0,<3
+python-dotenv>=1.0,<2
+requests>=2.32,<3
+beautifulsoup4>=4.12,<5
+Pillow>=10.4,<13
+pytesseract>=0.3.13,<1
+opencv-python-headless>=4.10,<5
+google-genai>=1.0,<2
+pandas>=2.2,<4
