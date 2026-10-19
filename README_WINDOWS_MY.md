@@ -1,53 +1,37 @@
-# Windows မှာ စတင်အသုံးပြုနည်း
+# Windows Setup (Node.js) — မြန်မာလမ်းညွှန်
 
-## 1. လိုအပ်တာတွေ
-- Python 3.11
-- PostgreSQL 15 သို့မဟုတ် အထက်
-- Tesseract OCR for Windows (OCR လုပ်ဖို့)
-- Gemini API key (AI ဘာသာပြန်ဖို့)
+ဒီ project ရဲ့ အဓိက App ကို Node.js နဲ့ ပြန်ရေးထားပါတယ်။ Python install လုပ်ဖို့ မလိုပါ။
 
-## 2. PostgreSQL database ပြင်ဆင်ပါ
-PostgreSQL ထဲမှာ `manga_translator` ဆိုတဲ့ database တစ်ခု ဖန်တီးပါ။ pgAdmin ကနေ Create > Database နဲ့လုပ်နိုင်ပါတယ်။
+## ၁။ လိုအပ်တာတွေ
+- Node.js 20 နှင့်အထက် (npm ပါပြီးသား)
+- PostgreSQL
+- Gemini API key
 
-## 3. Project ကို download/clone လုပ်ပါ
-PowerShell ဖွင့်ပြီး-
+## ၂။ Database ပြင်ဆင်ပါ
+pgAdmin မှာ manga_translator ဆိုတဲ့ database တစ်ခု Create လုပ်ပါ။ PostgreSQL port က 5433 ဖြစ်ရင် .env ထဲမှာ 5433 ကိုသုံးပါ။
 
-```powershell
-git clone https://github.com/dxym29/manga.git
-cd manga
-Copy-Item .env.example .env
-notepad .env
-```
+## ၃။ .env ဖိုင်လုပ်ပါ
+VS Code terminal ထဲမှာ ဒီ command ရိုက်ပါ။
+`Copy-Item .env.example .env`
+ပြီးရင် .env ဖိုင်ကိုဖွင့်ပြီး DATABASE_URL နဲ့ GEMINI_API_KEY ကို ဖြည့်ပါ။
+ဥပမာ:
+`DATABASE_URL=postgresql://postgres:YOUR_URL_ENCODED_PASSWORD@localhost:5432/manga_translator`
+`GEMINI_API_KEY=your_gemini_api_key`
+`GEMINI_MODEL=gemini-2.5-flash`
+Password ထဲမှာ # ပါရင် %23၊ @ ပါရင် %40 လို့ URL encode လုပ်ပါ။ ကိုယ့် password ကို GitHub ပေါ် မတင်ပါနဲ့။
 
-`.env` ထဲက `DATABASE_URL` ကို မိမိ PostgreSQL password နဲ့ပြင်ပါ။ Password ထဲမှာ `@`, `#`, `/`, `:` စတဲ့ အက္ခရာတွေပါရင် URL encoding လုပ်ရနိုင်ပါတယ်။ Gemini key ကို `GEMINI_API_KEY` ထဲထည့်ပါ။
+## ၄။ App ကို run ပါ
+VS Code terminal ထဲမှာ တစ်ကြောင်းချင်းရိုက်ပါ။
+`npm install`
+`npm start`
+ပြီးရင် browser မှာ http://localhost:3000 ကိုဖွင့်ပါ။
 
-## 4. Python package တွေ install လုပ်ပါ
-```powershell
-py -3.11 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
+## ၅။ စမ်းသပ်ပါ
+1. ကိုယ်ပိုင် သို့မဟုတ် ခွင့်ပြုချက်ရှိတဲ့ manga/webtoon ပုံတွေ upload လုပ်ပါ။
+2. Save chapter လုပ်ပါ။
+3. Page thumbnail ကိုနှိပ်ပြီး OCR လုပ်ပါ။
+4. Translate chapter with Gemini ကိုနှိပ်ပါ။
+5. မြန်မာစာကို စစ်ပြီးပြင်ပါ။
+6. Export ZIP လုပ်ပါ။
 
-PowerShell က script activation ကို ပိတ်ထားရင် activation မလုပ်ဘဲ ဒီလို run ပါ-
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m streamlit run app.py
-```
-
-## 5. Tesseract OCR
-Tesseract OCR ကို Windows မှာ install လုပ်ပါ။ Myanmar/Japanese/Korean/Chinese စတဲ့ source language တွေအတွက် လိုအပ်တဲ့ language data ကိုလည်း ထည့်သွင်းရပါမယ်။ `.env` ထဲက `TESSERACT_CMD` ကို မိမိစက်ပေါ်ရှိ `tesseract.exe` လမ်းကြောင်းနဲ့ပြင်နိုင်ပါတယ်။
-
-## 6. App ကိုဖွင့်ပါ
-```powershell
-streamlit run app.py
-```
-Browser မှာ `http://localhost:8501` ကိုဖွင့်ပါ။
-
-## သတိပြုရန်
-- အစပိုင်းမှာ မိမိပိုင်/ခွင့်ပြုချက်ရထားတဲ့ images သို့မဟုတ် local sample images နဲ့ စမ်းသပ်ပါ။
-- URL import သည် `ALLOWED_SOURCE_DOMAINS` မပြင်ထားသေးရင် ပိတ်ထားပါတယ်။ ခွင့်ပြုချက်ရှိတဲ့ exact hostnames တွေကိုသာ ထည့်ပါ။
-- ဒီ version က prototype ဖြစ်ပါတယ်။ OCR ဟာ manga font နဲ့ sound effect တွေကို လွတ်သွားနိုင်ပြီး inpainting က နောက်ခံပုံကို အမြဲမပြည့်စုံစွာ ပြန်မတည်ဆောက်နိုင်ပါ။
-- မြန်မာစာအတွက် font path ထည့်ပါ။ မဟုတ်ရင် default font က မြန်မာစာကို မှန်ကန်စွာမပြနိုင်ပါ။
-- `.env` ကို GitHub မတင်ပါနဲ့။
+OCR ပထမဆုံးအကြိမ်မှာ language data download လုပ်နိုင်ပါတယ်။ Export ပုံတွေကို အသုံးမပြုခင် ပြန်စစ်ပါ။
